@@ -3,10 +3,6 @@ import Layout from '@/components/layout/Layout';
 import HeroBanner from './HeroBanner';
 import FeaturedPicks from './FeaturedPicks';
 import TrendingEpisodes from './TrendingEpisodes';
-import NewAndNoteworthy from './NewAndNoteworthy';
-import Suggestions from './Suggestions';
-import DiscoverMore from './DiscoverMore';
-import NewsletterCTA from './NewsletterCTA';
 import Partners from './Partners';
 import { EditorsPick } from './EditorsPick';
 import ListenByCategories from './ListenByCategories';
@@ -23,13 +19,8 @@ export const LandingPage = () => {
         <FeaturedPicks />
         <ListenByCategories />
         <NewsLetter />
-
-        
-        
-        <Suggestions />
-        <DiscoverMore />
-        <NewsletterCTA />
         <Partners />
+  
       </div>
     </Layout>
   );

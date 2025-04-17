@@ -5,7 +5,6 @@ import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { Input, Button } from 'antd';
 
-// Animation variants
 const textVariants = {
   hidden: { opacity: 0, y: 20 },
   visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: 'easeOut' } },
@@ -26,10 +25,8 @@ export const NewsLetter = () => {
   return (
     <section className='bg-[#F6E8E8] px-4 sm:px-10 lg:px-20 py-10'>
       <div className='flex flex-col lg:flex-row lg:items-center lg:gap-8 max-w-7xl mx-auto'>
-        {/* Left Content */}
         <motion.div
-          className='lg:w-1/2 lg:mt-10' // Offset vertically on large screens
-          initial='hidden'
+          className='lg:w-1/2 lg:mt-10' 
           whileInView='visible'
           viewport={{ once: true }}
           variants={textVariants}
@@ -65,7 +62,6 @@ export const NewsLetter = () => {
           </div>
         </motion.div>
 
-        {/* Right Image */}
         <motion.div
           className='lg:w-1/2 flex justify-center items-center mt-8 lg:mt-0'
           initial='hidden'
