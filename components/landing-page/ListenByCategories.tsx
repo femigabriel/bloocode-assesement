@@ -6,7 +6,7 @@ import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { motion } from "framer-motion";
 import { Button } from "antd";
-import { RightOutlined } from '@ant-design/icons';
+import { RightOutlined } from "@ant-design/icons";
 
 interface Podcast {
   id: number;
@@ -120,9 +120,9 @@ const ListenByCategories: React.FC = () => {
         <Button
           onClick={toggleView}
           className="text-sm font-medium text-[#9747FF] px-5 py-3 hover:text-[#9747FF] border-[#9747FF] shadow-md rounded-[22px] transition-colors"
-        
         >
-          {view === "categories" ? "View All" : "View Categories"} <RightOutlined className="text-sm text-[#9747FF] " />
+          {view === "categories" ? "View All" : "View Categories"}{" "}
+          <RightOutlined className="text-sm text-[#9747FF] " />
         </Button>
       </div>
 
@@ -209,7 +209,7 @@ const ListenByCategories: React.FC = () => {
                         variants={cardVariants}
                         custom={index}
                         whileHover="hover"
-                        className="bg-gray-100 rounded-md overflow-hidden shadow-sm flex-none w-60 snap-start"
+                        className="bg-[#F4F4F4] rounded-md overflow-hidden shadow-sm flex-none w-60   snap-start"
                       >
                         <Image
                           src={
@@ -225,6 +225,26 @@ const ListenByCategories: React.FC = () => {
                           <h5 className="font-semibold text-md truncate">
                             {podcast.title}
                           </h5>
+                          <div className="mt-3 flex gap-3">
+                            <button>
+                              <Image
+                                src="/assets/icons/Group 1289.svg"
+                                alt="icon"
+                                width={20}
+                                height={20}
+                                draggable="false"
+                              />
+                            </button>
+                            <button>
+                              <Image
+                                src="/assets/icons/Group 1293.svg"
+                                alt="icon"
+                                width={20}
+                                height={20}
+                                draggable="false"
+                              />
+                            </button>
+                          </div>
                         </div>
                       </motion.div>
                     ))}
@@ -249,7 +269,7 @@ const ListenByCategories: React.FC = () => {
                   variants={cardVariants}
                   custom={index}
                   whileHover="hover"
-                  className="bg-gray-100 rounded-md overflow-hidden shadow-sm flex-none w-60 snap-start"
+                  className="bg-[#F4F4F4] rounded-md overflow-hidden shadow-sm flex-none w-60 snap-start"
                 >
                   <Image
                     src={podcast.picture_url || "/assets/images/fallback.jpg"}
@@ -263,6 +283,26 @@ const ListenByCategories: React.FC = () => {
                     <h5 className="font-semibold text-md truncate">
                       {podcast.title}
                     </h5>
+                    <div className="mt-3 flex gap-3">
+                      <button>
+                        <Image
+                          src="/assets/icons/Group 1289.svg"
+                          alt="icon"
+                          width={20}
+                          height={20}
+                          draggable="false"
+                        />
+                      </button>
+                      <button>
+                        <Image
+                          src="/assets/icons/Group 1293.svg"
+                          alt="icon"
+                          width={20}
+                          height={20}
+                          draggable="false"
+                        />
+                      </button>
+                    </div>
                   </div>
                 </motion.div>
               ))}

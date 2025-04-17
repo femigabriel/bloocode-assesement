@@ -10,8 +10,8 @@ interface Episode {
   id: number;
   title: string;
   picture_url: string;
-  duration: number; // Duration in seconds
-  published_at: string; // ISO date string
+  duration: number;
+  published_at: string;
   podcast: {
     title: string;
   };
@@ -36,22 +36,20 @@ const containerVariants = {
   visible: { opacity: 1, transition: { staggerChildren: 0.1 } },
 };
 
-// Utility function to format ISO date to "MMM DD, YYYY" (e.g., "APR 15, 2025")
 const formatDate = (isoDate: string): string => {
   const date = new Date(isoDate);
   return date
     .toLocaleDateString("en-US", {
-      month: "short", // e.g., "APR"
-      day: "2-digit", // e.g., "15"
-      year: "numeric", // e.g., "2025"
+      month: "short",
+      day: "2-digit",
+      year: "numeric",
     })
     .toUpperCase()
-    .replace(/,/g, ""); // Convert to uppercase and remove commas
+    .replace(/,/g, "");
 };
 
-// Utility function to format duration from seconds to "X MINS"
 const formatDuration = (seconds: number): string => {
-  const minutes = Math.round(seconds / 60); // Round to nearest minute
+  const minutes = Math.round(seconds / 60);
   return `${minutes} MINS`;
 };
 
@@ -157,22 +155,22 @@ const FeaturedPicks: React.FC = () => {
                 <div className="mt-3 flex gap-3">
                   <span className="text-[#BEBEBE] text-xs">More Episodes</span>
                   <button>
-                  <Image
-                src="/assets/icons/Group 1289.svg"
-                alt="icon"
-                width={20}
-                height={20}
-                draggable="false"
-              />
+                    <Image
+                      src="/assets/icons/Group 1289.svg"
+                      alt="icon"
+                      width={20}
+                      height={20}
+                      draggable="false"
+                    />
                   </button>
                   <button>
-                  <Image
-                src="/assets/icons/Group 1293.svg"
-                alt="icon"
-                width={20}
-                height={20}
-                draggable="false"
-              />
+                    <Image
+                      src="/assets/icons/Group 1293.svg"
+                      alt="icon"
+                      width={20}
+                      height={20}
+                      draggable="false"
+                    />
                   </button>
                 </div>
               </div>
