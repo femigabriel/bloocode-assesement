@@ -9,6 +9,7 @@ import Suggestions from './Suggestions';
 import DiscoverMore from './DiscoverMore';
 import NewsletterCTA from './NewsletterCTA';
 import Partners from './Partners';
+import { EditorsPick } from './EditorsPick';
 
 
 export const LandingPage = () => {
@@ -16,6 +17,7 @@ export const LandingPage = () => {
     <Layout>
       <HeroBanner />
       <div className="container mx-auto px-4 py-8 space-y-16">
+        <EditorsPick />
         <FeaturedPicks />
         <TopPodcasts />
         <TrendingEpisodes />

@@ -1,15 +1,78 @@
+"use client";
+
 import React from "react";
 import Image from "next/image";
 
-const HeroBanner: React.FC = () => (
-  <section className="py-3 px-4 ">
-    <Image
-      src="/assets/images/Group 1086.svg"
-      alt="hero"
-      width={800}
-      height={300}
-      className="mx-auto object-cover"
-    />
+const HeroBanner = () => (
+  <section>
+    <div className="flex h-[72px] w-full">
+      <div className="h-full max-w-[588px]">
+        <Image
+          src="/assets/images/Group 974.svg"
+          alt="hero"
+          width={608}
+          height={72}
+          className="w-full h-full object-cover"
+          draggable="false"
+        />
+      </div>
+
+      <div className="flex-1 bg-[#1B1B1B] h-full flex items-center justify-center">
+        <nav className="flex justify-between text-white w-full max-w-4xl px-6 text-sm">
+          <li className="flex items-center gap-2 list-none">
+            <Image
+              src="/assets/icons/book-alt 1.svg"
+              alt="icon"
+              width={18}
+              height={18}
+              draggable="false"
+            />
+            <span>Latest News</span>
+          </li>
+          <li className="flex items-center gap-2 list-none">
+            <Image
+              src="/assets/icons/microphone-alt 1.svg"
+              alt="icon"
+              width={18}
+              height={18}
+              draggable="false"
+            />
+            <span>New Episodes</span>
+          </li>
+          <li className="flex items-center gap-2 list-none">
+            <Image
+              src="/assets/icons/boxes 1.svg"
+              alt="icon"
+              width={18}
+              height={18}
+              draggable="false"
+            />
+            <span>Our Services</span>
+          </li>
+          <li className="flex items-center gap-2 list-none">
+            <Image
+              src="/assets/icons/podcast (1) 1.svg"
+              alt="icon"
+              width={18}
+              height={18}
+              draggable="false"
+            />
+            <span>All Podcasts</span>
+          </li>
+        </nav>
+      </div>
+    </div>
+
+    <div className="py-4 px-4 bg-white">
+      <Image
+        src="/assets/images/Group 1086.svg"
+        alt="hero content"
+        width={800}
+        height={300}
+        className="mx-auto w-full max-w-[800px] object-cover"
+        draggable="false"
+      />
+    </div>
   </section>
 );
 

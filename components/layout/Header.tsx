@@ -46,7 +46,7 @@ const Header: React.FC = () => {
             alt="logo"
             width={20}
             height={20}
-            className="w-[100px] md:w-[140px] h-auto"
+            className="w-[80px] md:w-[108px] h-auto"
             draggable="false"
           />
         </Link>
