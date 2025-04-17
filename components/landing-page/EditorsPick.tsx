@@ -19,7 +19,6 @@ const miniCardVariants = {
   hover: { scale: 1.05, transition: { duration: 0.3 } },
 };
 
-// Parent container variant for staggered children
 const containerVariants = {
   hidden: { opacity: 0 },
   visible: {
@@ -41,7 +40,6 @@ export const EditorsPick = () => {
       </div>
 
       <div className="py-4 flex flex-col md:flex-row gap-6 w-full h-full">
-        {/* LEFT FEATURED IMAGE */}
         <motion.div
           variants={imageVariants}
           initial="hidden"
@@ -61,7 +59,6 @@ export const EditorsPick = () => {
           />
         </motion.div>
 
-        {/* RIGHT MINI CARDS */}
         <motion.div
           variants={containerVariants}
           initial="hidden"
@@ -69,9 +66,7 @@ export const EditorsPick = () => {
           viewport={{ once: true }}
           className="flex flex-col gap-4 w-full max-w-[650px]"
         >
-          {/* Top Two Cards Side by Side */}
           <div className="flex gap-4">
-            {/* Card 1 */}
             <motion.div
               variants={miniCardVariants}
               custom={0}
@@ -87,7 +82,6 @@ export const EditorsPick = () => {
               />
             </motion.div>
 
-            {/* Card 2 */}
             <motion.div
               variants={miniCardVariants}
               custom={1}
@@ -104,7 +98,6 @@ export const EditorsPick = () => {
             </motion.div>
           </div>
 
-          {/* Bottom Single Card */}
           <motion.div
             variants={miniCardVariants}
             custom={2}

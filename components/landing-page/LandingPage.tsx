@@ -18,9 +18,10 @@ export const LandingPage = () => {
       <HeroBanner />
       <div className="container mx-auto px-4 py-8 space-y-16">
         <EditorsPick />
+        <TrendingEpisodes />
         <FeaturedPicks />
         <TopPodcasts />
-        <TrendingEpisodes />
+  
         <NewAndNoteworthy />
         <Suggestions />
         <DiscoverMore />
