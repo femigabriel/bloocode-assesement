@@ -10,6 +10,7 @@ import NewsletterCTA from './NewsletterCTA';
 import Partners from './Partners';
 import { EditorsPick } from './EditorsPick';
 import ListenByCategories from './ListenByCategories';
+import { NewsLetter } from './NewsLetter';
 
 
 export const LandingPage = () => {
@@ -21,8 +22,10 @@ export const LandingPage = () => {
         <TrendingEpisodes />
         <FeaturedPicks />
         <ListenByCategories />
-  
-        <NewAndNoteworthy />
+        <NewsLetter />
+
+        
+        
         <Suggestions />
         <DiscoverMore />
         <NewsletterCTA />
