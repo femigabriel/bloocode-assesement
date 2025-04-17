@@ -52,7 +52,6 @@ const fetchPodcasts = async (): Promise<Podcast[]> => {
   }
 };
 
-// Define Figma categories and map to API category_types
 const categoryGroups: { name: string; category_types: string[] }[] = [
   {
     name: "News & Storytelling",
@@ -91,7 +90,6 @@ const ListenByCategories: React.FC = () => {
     retry: 3,
   });
 
-  // Group podcasts by Figma categories
   const groupedCategories: CategoryGroup[] = categoryGroups.map((group) => ({
     name: group.name,
     category_types: group.category_types,
