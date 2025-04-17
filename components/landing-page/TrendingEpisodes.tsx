@@ -71,7 +71,7 @@ const TrendingEpisodes: React.FC = () => {
           {Array(4).fill(0).map((_, i) => (
             <div
               key={i}
-              className="bg-gray-100 rounded-md overflow-hidden shadow-sm flex-none w-60 snap-start"
+              className="bg-[#ffff] rounded-md overflow-hidden shadow-sm flex-none w-60 snap-start"
             >
               <div className="w-full h-40 bg-gray-300 animate-pulse" />
               <div className="p-3">
@@ -98,7 +98,7 @@ const TrendingEpisodes: React.FC = () => {
               variants={cardVariants}
               custom={index}
               whileHover="hover"
-              className="bg-gray-100 rounded-md overflow-hidden shadow-sm flex-none w-60 snap-start"
+              className="bg-[#ffff] rounded-md overflow-hidden shadow-sm flex-none w-60 snap-start"
             >
               <Image
                 src={episode.picture_url || '/assets/images/fallback.jpg'}

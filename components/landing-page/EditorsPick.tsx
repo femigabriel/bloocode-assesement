@@ -31,7 +31,7 @@ const containerVariants = {
 
 export const EditorsPick = () => {
   return (
-    <section className="px-4 py-8">
+    <section className="px-4 py-8 bg-[#F6F6F6]">
       <div className="mb-4">
         <h3 className="text-2xl font-semibold">EDITOR’S PICKS</h3>
         <p className="text-[#5A5A5A] text-sm border-l-[3px] border-[#CC0001] pl-2">
