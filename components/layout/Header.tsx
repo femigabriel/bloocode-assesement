@@ -1,22 +1,76 @@
-import React from 'react';
-import { Menu } from 'antd';
-import { SearchOutlined, UserOutlined } from '@ant-design/icons';
+"use client";
 
-const Header: React.FC = () => (
-  <header className="sticky top-0 z-50 bg-white shadow-sm">
-    <div className="max-w-7xl mx-auto flex items-center justify-between px-4 py-3">
-      <div className="text-2xl font-bold">Bloocode</div>
-      <Menu mode="horizontal" className="flex-1 justify-center hidden md:flex">
-        <Menu.Item key="home">Home</Menu.Item>
-        <Menu.Item key="categories">Categories</Menu.Item>
-        <Menu.Item key="top">Top Podcasts</Menu.Item>
-      </Menu>
-      <div className="flex gap-4">
-        <SearchOutlined className="text-xl cursor-pointer" />
-        <UserOutlined className="text-xl cursor-pointer" />
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import React from "react";
+import { Menu, Input } from "antd";
+import Image from "next/image";
+import { SearchOutlined } from "@ant-design/icons";
+
+const menuItems = [
+  {
+    key: "/",
+    label: <Link href="/">Home</Link>,
+  },
+  {
+    key: "/company",
+    label: <Link href="/company">Company</Link>,
+  },
+  {
+    key: "/resources",
+    label: <Link href="/resources">Resources</Link>,
+  },
+  {
+    key: "/contact",
+    label: <Link href="/contact">Contact Us</Link>,
+  },
+  {
+    key: "/advertise",
+    label: <Link href="/advertise">Advertise</Link>,
+  },
+];
+
+const Header: React.FC = () => {
+  const pathname = usePathname();
+
+  const onSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+    console.log("Search term:", e.target.value);
+  };
+
+  return (
+    <header className="sticky top-0 z-50 bg-white h-[72px]">
+      <div className="max-w-7xl mx-auto flex items-center justify-between px-4 py-3">
+        <Link href="/">
+          <Image
+            src="/assets/images/ABR Logo 1.svg"
+            alt="logo"
+            width={20}
+            height={20}
+            className="w-[100px] md:w-[140px] h-auto"
+            draggable="false"
+          />
+        </Link>
+
+        <Menu
+          mode="horizontal"
+          selectedKeys={[pathname]}
+          items={menuItems}
+          className="flex-1 justify-center hidden md:flex"
+        />
+
+        <div className="header">
+       
+          <Input
+            onChange={onSearch}
+            placeholder="Search"
+              name="search"
+            prefix={<SearchOutlined className="text-white" />}
+            className=" bg-[#00000052] h-[43px] rounded-[32px]"
+          />
+        </div>
       </div>
-    </div>
-  </header>
-);
+    </header>
+  );
+};
 
 export default Header;

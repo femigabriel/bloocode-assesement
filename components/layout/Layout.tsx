@@ -10,15 +10,15 @@ interface LayoutProps {
 const Layout: React.FC<LayoutProps> = ({ children }) => {
   return (
     <div className="flex flex-col min-h-screen bg-white text-black">
-      <header className="sticky top-0 z-50">
+      <div className="sticky top-0 z-50">
         <Header />
-      </header>
+      </div>
 
       <main className="flex-grow">{children}</main>
 
-      <footer>
+      <div>
         <Footer />
-      </footer>
+      </div>
     </div>
   );
 };
