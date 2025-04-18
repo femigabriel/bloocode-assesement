@@ -294,18 +294,18 @@ const PodcastDetails = () => {
             whileTap={{ scale: 0.9 }}
           >
             <Image
-              src="/assets/icons/Group 1156.svg"
+              src="/assets/icons/Component 23.svg"
               alt="Share podcast"
-              width={24}
-              height={24}
+              width={30}
+              height={30}
               draggable="false"
               className="w-5 sm:w-6 h-5 sm:h-6"
             />
           </motion.button>
         </motion.div>
       )}
+      
 
-      {/* Episodes and Advertisement Section */}
       {!isPodcastLoading && podcast && (
         <div className="flex flex-col md:flex-row gap-6 px-4 sm:px-6 md:px-10 py-12 max-w-7xl mx-auto">
           <div className="flex-1 min-w-0">
@@ -356,25 +356,7 @@ const PodcastDetails = () => {
                       className="bg-white rounded-2xl shadow-md p-4 sm:p-6 flex flex-col sm:flex-row gap-4 relative cursor-pointer"
                       data-testid="episode-card"
                     >
-                      <motion.button
-                        onClick={(e) => {
-                          e.preventDefault();
-                          handleShare(episode.title, episode.content_url);
-                        }}
-                        className="absolute top-4 right-4 flex-shrink-0"
-                        aria-label={`Share ${episode.title}`}
-                        whileHover={{ scale: 1.1 }}
-                        whileTap={{ scale: 0.9 }}
-                      >
-                        <Image
-                          src="/assets/icons/Group 1156.svg"
-                          alt="Share episode"
-                          width={24}
-                          height={24}
-                          draggable="false"
-                          className="w-5 sm:w-6 h-5 sm:h-6"
-                        />
-                      </motion.button>
+                    
                       <div className="min-w-[157px]">
                         <Image
                           src={episode.picture_url || '/assets/images/fallback.jpg'}
@@ -387,7 +369,7 @@ const PodcastDetails = () => {
                         />
                       </div>
                       <div className="flex-1">
-                        <div className="flex gap-3 sm:gap-5 text-xs text-[#828282] mb-2">
+                        <div className="flex gap-3 font-bold sm:gap-5 text-xs text-[#828282] mb-2">
                           <p>{formatDate(episode.published_at)}</p>
                           <p>{formatDuration(episode.duration)}</p>
                         </div>

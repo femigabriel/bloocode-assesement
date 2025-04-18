@@ -176,7 +176,6 @@ const EpisodeDetails = () => {
     retry: 1,
   });
 
-  // Audio player controls
   const togglePlayPause = () => {
     if (audioRef.current) {
       if (isPlaying) {
@@ -203,6 +202,25 @@ const EpisodeDetails = () => {
       audioRef.current.currentTime = newTime;
       setCurrentTime(newTime);
     }
+  };
+
+  const handleShare = async () => {
+    if (episode && navigator.share) {
+      try {
+        await navigator.share({
+          title: episode.title,
+          url: episode.content_url,
+        });
+      } catch (err) {
+        console.error('Share failed:', err);
+      }
+    } else {
+      console.log('Share not supported or no episode data');
+    }
+  };
+
+  const handleGift = () => {
+    console.log('Gift button clicked for episode:', episode?.id);
   };
 
   useEffect(() => {
@@ -261,38 +279,6 @@ const EpisodeDetails = () => {
         animate="visible"
         className="px-4 sm:px-6 md:px-10 py-10 max-w-7xl mx-auto"
       >
-        {/* Header: Podcast Info and Back Button */}
-        {isPodcastLoading || !podcast ? (
-          <div className="flex items-center gap-4 mb-6">
-            <div className="w-12 h-12 bg-gray-300 animate-pulse rounded" />
-            <div className="h-6 bg-gray-300 rounded w-1/2 animate-pulse" />
-          </div>
-        ) : (
-          <div className="flex items-center gap-4 mb-6">
-            <Link href={`/podcast/${podcast.id}`} className="text-[#CC0001] hover:text-[#A30001]">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-6 w-6"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-              </svg>
-            </Link>
-            <Image
-              src={podcast.picture_url || '/assets/images/fallback.jpg'}
-              alt={podcast.title}
-              width={48}
-              height={48}
-              className="w-12 h-12 object-cover rounded"
-              unoptimized
-            />
-            <h2 className="text-sm font-bold text-[#BFBFBF] uppercase">{podcast.title}</h2>
-          </div>
-        )}
-
-        {/* Episode Details */}
         {isEpisodeLoading ? (
           <div className="flex flex-col md:flex-row gap-6">
             <div className="w-[157px] h-[129px] bg-gray-300 animate-pulse rounded" />
@@ -314,105 +300,165 @@ const EpisodeDetails = () => {
         ) : (
           <motion.div
             variants={cardVariants}
-            className="flex flex-col md:flex-row gap-6 p-10"
+            className="p-10"
             style={{
               background: 'linear-gradient(133.14deg, #2B3221 9.11%, rgba(242, 242, 242, 0) 298.89%)',
             }}
           >
-            <div>
-              <Image
-                src={episode.picture_url || '/assets/images/fallback.jpg'}
-                alt={episode.title}
-                width={157}
-                height={129}
-                className="w-[157px] h-[129px] object-cover rounded shadow-md"
-                unoptimized
-                aria-label={`Cover for ${episode.title}`}
-              />
-            </div>
-            <div className="flex-1">
-              <div className="flex gap-3 font-bold sm:gap-5 text-xs text-[#BFBFBF] mb-2">
-                <p>{formatDate(episode.published_at)}</p>
-                <p>{formatDuration(episode.duration)}</p>
-              </div>
-              <h1 className="text-base sm:text-lg font-semibold text-white mb-2">
-                {episode.title}
-              </h1>
-              <p className="text-sm sm:text-sm text-[#FFFFFF] leading-relaxed mb-6">
-                {cleanDescription(episode.description)}
-              </p>
-              <div className="w-full max-w-md mb-4">
-                <audio ref={audioRef} src={episode.content_url} />
-                <div className="mt-5 flex items-center gap-2">
-                  <span className="text-xs text-[#BFBFBF]">{formatTime(currentTime)}</span>
-                  <input
-                    type="range"
-                    min={0}
-                    max={duration || 100}
-                    value={currentTime}
-                    onChange={handleSeek}
-                    className="w-full h-1 bg-gray-300 rounded-full appearance-none cursor-pointer"
-                    style={{
-                      background: `linear-gradient(to right, #CC0001 ${
-                        ((currentTime / duration) * 100) || 0
-                      }%, #DCDCDC ${((currentTime / duration) * 100) || 0}%)`,
-                    }}
+            {isPodcastLoading || !podcast ? (
+              <div className="h-6 bg-gray-300 rounded w-1/4 mb-6 animate-pulse" />
+            ) : (
+              <Link
+                href={`/podcast/${podcast.id}`}
+                className="flex items-center gap-2 text-white hover:text-[#8888] mb-6"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-6 w-6"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M15 19l-7-7 7-7"
                   />
-                  <span className="text-xs text-[#BFBFBF]">{formatTime(duration)}</span>
+                </svg>
+                <span className="text-sm font-medium">Back to podcast</span>
+              </Link>
+            )}
+
+            <div className="flex flex-col md:flex-row gap-6">
+              <div>
+                <Image
+                  src={episode.picture_url || '/assets/images/fallback.jpg'}
+                  alt={episode.title}
+                  width={157}
+                  height={129}
+                  className="w-[157px] h-[129px] object-cover rounded shadow-md"
+                  unoptimized
+                  aria-label={`Cover for ${episode.title}`}
+                />
+              </div>
+              <div className="flex-1">
+                <div className="flex gap-3 font-bold sm:gap-5 text-xs text-[#BFBFBF] mb-2">
+                  <p>{formatDate(episode.published_at)}</p>
+                  <p>{formatDuration(episode.duration)}</p>
                 </div>
-                <div className="flex items-center gap-4 mt-5">
-                  <motion.button
-                    onClick={() => skip(-10)}
-                    variants={iconVariants}
-                    whileHover="hover"
-                    whileTap="tap"
-                    aria-label="Rewind 10 seconds"
-                  >
-                    <Image
-                      src="/assets/icons/backward.svg"
-                      alt="Rewind"
-                      width={24}
-                      height={24}
-                      className="w-6 h-6"
+                <h1 className="text-base sm:text-lg font-semibold text-white mb-2">
+                  {episode.title}
+                </h1>
+                <p className="text-sm sm:text-sm text-[#FFFFFF] leading-relaxed mb-6">
+                  {cleanDescription(episode.description)}
+                </p>
+                <div className="w-full  mb-4">
+                  <audio ref={audioRef} src={episode.content_url} />
+                  <div className="mt-5 flex items-center gap-2">
+                    <span className="text-xs text-[#BFBFBF]">{formatTime(currentTime)}</span>
+                    <input
+                      type="range"
+                      min={0}
+                      max={duration || 100}
+                      value={currentTime}
+                      onChange={handleSeek}
+                      className="w-full h-1 bg-gray-300 rounded-full appearance-none cursor-pointer"
+                      style={{
+                        background: `linear-gradient(to right, #CC0001 ${
+                          ((currentTime / duration) * 100) || 0
+                        }%, #DCDCDC ${((currentTime / duration) * 100) || 0}%)`,
+                      }}
                     />
-                  </motion.button>
-                  <motion.button
-                    onClick={togglePlayPause}
-                    variants={iconVariants}
-                    whileHover="hover"
-                    whileTap="tap"
-                    aria-label={isPlaying ? 'Pause' : 'Play'}
-                  >
-                    <Image
-                      src={isPlaying ? '/assets/icons/pause.svg' : '/assets/icons/Others.svg'}
-                      alt={isPlaying ? 'Pause' : 'Play'}
-                      width={30}
-                      height={30}
-                      className="w-8 h-8"
-                    />
-                  </motion.button>
-                  <motion.button
-                    onClick={() => skip(10)}
-                    variants={iconVariants}
-                    whileHover="hover"
-                    whileTap="tap"
-                    aria-label="Fast forward 10 seconds"
-                  >
-                    <Image
-                      src="/assets/icons/forward.svg"
-                      alt="Forward"
-                      width={24}
-                      height={24}
-                      className="w-6 h-6"
-                    />
-                  </motion.button>
+                    <span className="text-xs text-[#BFBFBF]">{formatTime(duration)}</span>
+                  </div>
+                  <div className="w-full flex justify-between mt-5">
+                    <div className="flex gap-4">
+                      <motion.button
+                        onClick={() => skip(-10)}
+                        variants={iconVariants}
+                        whileHover="hover"
+                        whileTap="tap"
+                        aria-label="Rewind 10 seconds"
+                      >
+                        <Image
+                          src="/assets/icons/backward.svg"
+                          alt="Rewind"
+                          width={24}
+                          height={24}
+                          className="w-6 h-6"
+                        />
+                      </motion.button>
+                      <motion.button
+                        onClick={togglePlayPause}
+                        variants={iconVariants}
+                        whileHover="hover"
+                        whileTap="tap"
+                        aria-label={isPlaying ? 'Pause' : 'Play'}
+                      >
+                        <Image
+                          src={isPlaying ? '/assets/icons/pause.svg' : '/assets/icons/Others.svg'}
+                          alt={isPlaying ? 'Pause' : 'Play'}
+                          width={30}
+                          height={30}
+                          className="w-8 h-8"
+                        />
+                      </motion.button>
+                      <motion.button
+                        onClick={() => skip(10)}
+                        variants={iconVariants}
+                        whileHover="hover"
+                        whileTap="tap"
+                        aria-label="Fast forward 10 seconds"
+                      >
+                        <Image
+                          src="/assets/icons/forward.svg"
+                          alt="Forward"
+                          width={24}
+                          height={24}
+                          className="w-6 h-6"
+                        />
+                      </motion.button>
+                    </div>
+                    <div className="flex  gap-4">
+                      <motion.button
+                        onClick={handleShare}
+                        variants={iconVariants}
+                        whileHover="hover"
+                        whileTap="tap"
+                        aria-label="Share episode"
+                      >
+                        <Image
+                          src="/assets/icons/Group 1156.svg"
+                          alt="Share"
+                          width={24}
+                          height={24}
+                          className="w-6 h-6"
+                        />
+                      </motion.button>
+                      <motion.button
+                        onClick={handleGift}
+                        variants={iconVariants}
+                        whileHover="hover"
+                        whileTap="tap"
+                        aria-label="Gift episode"
+                      >
+                        <Image
+                          src="/assets/icons/Group 1157.svg"
+                          alt="Gift"
+                          width={24}
+                          height={24}
+                          className="w-6 h-6"
+                        />
+                      </motion.button>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
           </motion.div>
         )}
 
-        {/* Next Episodes */}
         {isEpisodesLoading || !episodes ? (
           <div className="mt-10">
             <h3 className="text-sm font-bold mb-4">NEXT EPISODES IN QUEUE</h3>
