@@ -1,12 +1,13 @@
-"use client";
+'use client';
 
-import React, { useState } from "react";
-import Image from "next/image";
-import { useQuery } from "@tanstack/react-query";
-import axios from "axios";
-import { motion } from "framer-motion";
-import { Button } from "antd";
-import { RightOutlined } from "@ant-design/icons";
+import React, { useState } from 'react';
+import Image from 'next/image';
+import Link from 'next/link';
+import { useQuery } from '@tanstack/react-query';
+import axios from 'axios';
+import { motion } from 'framer-motion';
+import { Button } from 'antd';
+import { RightOutlined } from '@ant-design/icons';
 
 interface Podcast {
   id: number;
@@ -26,11 +27,11 @@ const cardVariants = {
   visible: (i: number) => ({
     opacity: 1,
     y: 0,
-    transition: { duration: 0.5, delay: i * 0.1, ease: "easeOut" },
+    transition: { duration: 0.5, delay: i * 0.1, ease: 'easeOut' },
   }),
   hover: {
     scale: 1.05,
-    boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)",
+    boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
     transition: { duration: 0.3 },
   },
 };
@@ -43,49 +44,49 @@ const containerVariants = {
 const fetchPodcasts = async (): Promise<Podcast[]> => {
   try {
     const { data } = await axios.get(
-      "https://api.wokpa.app/api/listeners/top-podcasts?page=1&per_page=50"
+      'https://api.wokpa.app/api/listeners/top-podcasts?page=1&per_page=50'
     );
     return Array.isArray(data?.data?.data) ? data.data.data : [];
   } catch (error) {
-    console.error("Error fetching podcasts:", error);
-    throw new Error("Failed to fetch podcasts");
+    console.error('Error fetching podcasts:', error);
+    throw new Error('Failed to fetch podcasts');
   }
 };
 
 const categoryGroups: { name: string; category_types: string[] }[] = [
   {
-    name: "News & Storytelling",
-    category_types: ["NEWS", "SOCIETY & CULTURE"],
+    name: 'News & Storytelling',
+    category_types: ['NEWS', 'SOCIETY & CULTURE'],
   },
-  { name: "Educational", category_types: ["EDUCATION"] },
+  { name: 'Educational', category_types: ['EDUCATION'] },
   {
-    name: "Entertainment & Lifestyle",
-    category_types: ["LEISURE", "ARTS", "KIDS & FAMILY"],
-  },
-  {
-    name: "Tech, Sport & Business",
-    category_types: ["TECHNOLOGY", "SPORTS", "BUSINESS"],
+    name: 'Entertainment & Lifestyle',
+    category_types: ['LEISURE', 'ARTS', 'KIDS & FAMILY'],
   },
   {
-    name: "Other Podcasts",
+    name: 'Tech, Sport & Business',
+    category_types: ['TECHNOLOGY', 'SPORTS', 'BUSINESS'],
+  },
+  {
+    name: 'Other Podcasts',
     category_types: [
-      "RELIGION & SPIRITUALITY",
-      "GOVERNMENT",
-      "HEALTH & FITNESS",
-      "HISTORY",
+      'RELIGION & SPIRITUALITY',
+      'GOVERNMENT',
+      'HEALTH & FITNESS',
+      'HISTORY',
     ],
   },
 ];
 
 const ListenByCategories: React.FC = () => {
-  const [view, setView] = useState<"categories" | "all">("categories");
+  const [view, setView] = useState<'categories' | 'all'>('categories');
   const {
     data: podcasts,
     isLoading,
     isError,
     error,
   } = useQuery<Podcast[], Error>({
-    queryKey: ["topPodcasts"],
+    queryKey: ['topPodcasts'],
     queryFn: fetchPodcasts,
     retry: 3,
   });
@@ -100,11 +101,21 @@ const ListenByCategories: React.FC = () => {
   }));
 
   const toggleView = () => {
-    setView(view === "categories" ? "all" : "categories");
+    setView(view === 'categories' ? 'all' : 'categories');
   };
 
   return (
     <section className="px-4 py-8">
+      <style jsx>{`
+        .no-scrollbar::-webkit-scrollbar {
+          display: none;
+        }
+        .no-scrollbar {
+          -ms-overflow-style: none;
+          scrollbar-width: none;
+        }
+      `}</style>
+
       <div className="mb-10 flex justify-between items-center">
         <motion.h3
           initial={{ opacity: 0, y: -20 }}
@@ -121,14 +132,14 @@ const ListenByCategories: React.FC = () => {
           onClick={toggleView}
           className="text-sm font-medium text-[#9747FF] px-5 py-3 hover:text-[#9747FF] border-[#9747FF] shadow-md rounded-[22px] transition-colors"
         >
-          {view === "categories" ? "View All" : "View Categories"}{" "}
+          {view === 'categories' ? 'View All' : 'View Categories'}{' '}
           <RightOutlined className="text-sm text-[#9747FF] " />
         </Button>
       </div>
 
       {isLoading ? (
         <div>
-          {view === "categories" ? (
+          {view === 'categories' ? (
             categoryGroups.map((group) => (
               <div key={group.name} className="mb-8">
                 <h4 className="text-[#5A5A5A] text-sm border-l-[3px] border-[#CC0001] pl-2 mb-4">
@@ -171,23 +182,30 @@ const ListenByCategories: React.FC = () => {
         </div>
       ) : isError ? (
         <p className="text-red-500 text-center">
-          Error fetching podcasts: {error?.message || "Unknown error"}
+          Error fetching podcasts: {error?.message || 'Unknown error'}
         </p>
       ) : !podcasts || podcasts.length === 0 ? (
         <p className="text-gray-500 text-center">No podcasts available.</p>
       ) : (
         <div>
-          {view === "categories" ? (
+          {view === 'categories' ? (
             groupedCategories.map((group) => (
               <div key={group.name} className="mb-8">
-                <motion.h4
-                  initial={{ opacity: 0, y: -20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.5 }}
-                  className="text-[#5A5A5A] text-sm border-l-[3px] border-[#CC0001] pl-2 mb-4"
+                <Link
+                  href={`/categories/${encodeURIComponent(
+                    group.name.replace(/ & /g, '-')
+                  )}`}
+                  passHref
                 >
-                  {group.name}
-                </motion.h4>
+                  <motion.h4
+                    initial={{ opacity: 0, y: -20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5 }}
+                    className="text-[#5A5A5A] text-sm border-l-[3px] border-[#CC0001] pl-2 mb-4 hover:text-[#CC0001] cursor-pointer"
+                  >
+                    {group.name}
+                  </motion.h4>
+                </Link>
                 {group.podcasts.length === 0 ? (
                   <p className="text-gray-500">
                     No podcasts available in this category.
@@ -199,8 +217,8 @@ const ListenByCategories: React.FC = () => {
                     animate="visible"
                     className={`flex space-x-4 ${
                       group.podcasts.length < 4
-                        ? "justify-center"
-                        : "overflow-x-auto no-scrollbar snap-x snap-mandatory"
+                        ? 'justify-center'
+                        : 'overflow-x-auto no-scrollbar snap-x snap-mandatory'
                     }`}
                   >
                     {group.podcasts.map((podcast, index) => (
@@ -209,11 +227,11 @@ const ListenByCategories: React.FC = () => {
                         variants={cardVariants}
                         custom={index}
                         whileHover="hover"
-                        className="bg-[#F4F4F4] rounded-md overflow-hidden shadow-sm flex-none w-60   snap-start"
+                        className="bg-[#F4F4F4] rounded-md overflow-hidden shadow-sm flex-none w-60 snap-start"
                       >
                         <Image
                           src={
-                            podcast.picture_url || "/assets/images/fallback.jpg"
+                            podcast.picture_url || '/assets/images/fallback.jpg'
                           }
                           alt={podcast.title}
                           width={240}
@@ -226,7 +244,14 @@ const ListenByCategories: React.FC = () => {
                             {podcast.title}
                           </h5>
                           <div className="mt-3 flex gap-3">
-                            <button>
+                            <button
+                              onClick={() =>
+                                console.log(
+                                  'Button 1 clicked for podcast:',
+                                  podcast.id
+                                )
+                              }
+                            >
                               <Image
                                 src="/assets/icons/Group 1289.svg"
                                 alt="icon"
@@ -235,7 +260,14 @@ const ListenByCategories: React.FC = () => {
                                 draggable="false"
                               />
                             </button>
-                            <button>
+                            <button
+                              onClick={() =>
+                                console.log(
+                                  'Button 2 clicked for podcast:',
+                                  podcast.id
+                                )
+                              }
+                            >
                               <Image
                                 src="/assets/icons/Group 1293.svg"
                                 alt="icon"
@@ -259,8 +291,8 @@ const ListenByCategories: React.FC = () => {
               animate="visible"
               className={`flex space-x-4 ${
                 podcasts.length < 4
-                  ? "justify-center"
-                  : "overflow-x-auto no-scrollbar snap-x snap-mandatory"
+                  ? 'justify-center'
+                  : 'overflow-x-auto no-scrollbar snap-x snap-mandatory'
               }`}
             >
               {podcasts.map((podcast, index) => (
@@ -272,7 +304,7 @@ const ListenByCategories: React.FC = () => {
                   className="bg-[#F4F4F4] rounded-md overflow-hidden shadow-sm flex-none w-60 snap-start"
                 >
                   <Image
-                    src={podcast.picture_url || "/assets/images/fallback.jpg"}
+                    src={podcast.picture_url || '/assets/images/fallback.jpg'}
                     alt={podcast.title}
                     width={240}
                     height={160}
@@ -284,7 +316,11 @@ const ListenByCategories: React.FC = () => {
                       {podcast.title}
                     </h5>
                     <div className="mt-3 flex gap-3">
-                      <button>
+                      <button
+                        onClick={() =>
+                          console.log('Button 1 clicked for podcast:', podcast.id)
+                        }
+                      >
                         <Image
                           src="/assets/icons/Group 1289.svg"
                           alt="icon"
@@ -293,7 +329,11 @@ const ListenByCategories: React.FC = () => {
                           draggable="false"
                         />
                       </button>
-                      <button>
+                      <button
+                        onClick={() =>
+                          console.log('Button 2 clicked for podcast:', podcast.id)
+                        }
+                      >
                         <Image
                           src="/assets/icons/Group 1293.svg"
                           alt="icon"

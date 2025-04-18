@@ -6,7 +6,6 @@ export default function PodcastDetailPage() {
   return (
     <div>
       <LandingPage />
-
     </div>
   );
 }
