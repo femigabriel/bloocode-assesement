@@ -91,7 +91,6 @@ const fetchPodcastDetails = async (id: string): Promise<Podcast> => {
     const podcasts = results.flatMap((res) =>
       Array.isArray(res.data?.data?.data) ? res.data.data.data : []
     );
-    console.log('All Podcasts:', podcasts.map((p: Podcast) => p.id));
     const podcast = podcasts.find((p: Podcast) => p.id === Number(id));
     if (!podcast) {
       throw new Error(`Podcast with ID ${id} not found in top podcasts`);
@@ -108,7 +107,6 @@ const fetchPodcastEpisodes = async (id: string): Promise<Episode[]> => {
     const { data } = await axios.get(
       `https://api.wokpa.app/api/listeners/podcasts/${id}/episodes?page=1&per_page=20`
     );
-    console.log('Episodes Response:', data);
     return Array.isArray(data?.data?.data) ? data.data.data : [];
   } catch (error: any) {
     console.error('Episodes Fetch Error:', error.response?.status, error.message, error.response?.data);
@@ -120,8 +118,6 @@ const PodcastDetails = () => {
   const params = useParams();
   const id = params.id as string;
   const [notification, setNotification] = useState<string>('');
-
-  console.log('Podcast ID:', id);
 
   const {
     data: podcast,
@@ -206,17 +202,17 @@ const PodcastDetails = () => {
         </div>
       ) : isPodcastError ? (
         <div className="text-center py-10">
-          <p className=" mb-4">
+          <p className="mb-4">
             Unable to load podcast details: {podcastError?.message || 'Unknown error'}
           </p>
-          <Link href="/" className=" font-medium">
+          <Link href="/" className="font-medium">
             Back to Home
           </Link>
         </div>
       ) : !podcast ? (
         <div className="text-center py-10">
           <p className="text-gray-500 mb-4">Podcast not found.</p>
-          <Link href="/" className=" font-medium">
+          <Link href="/" className="font-medium">
             Back to Home
           </Link>
         </div>
@@ -230,36 +226,34 @@ const PodcastDetails = () => {
             background: 'linear-gradient(133.14deg, #2B3221 9.11%, rgba(242, 242, 242, 0) 298.89%)',
           }}
         >
-          <motion.div variants={imageVariants}>
+          <motion.div variants={imageVariants} className="mx-auto md:mx-0">
             <Image
               src={podcast.picture_url || '/assets/images/fallback.jpg'}
               alt={podcast.title}
               width={400}
               height={400}
-              className="w-full max-w-[320px] sm:max-w-[400px] h-auto aspect-square object-cover rounded shadow-md"
+              className="w-full max-w-[280px] sm:max-w-[320px] md:max-w-[400px] h-auto aspect-square object-cover rounded shadow-md"
               unoptimized
               aria-label={`Cover for ${podcast.title}`}
             />
           </motion.div>
+
           <div className="w-full flex-1 flex items-center">
-            <div className="w-full">
-              <h1
-                className="text-xs sm:text-sm font-bold text-[#BFBFBF] uppercase mb-4"
-                data-testid="podcast-title"
-              >
+            <div className="w-full text-center md:text-left">
+              <h1 className="text-xs sm:text-sm font-bold text-[#BFBFBF] uppercase mb-4">
                 {podcast.title}
               </h1>
               <p className="text-xl sm:text-2xl font-medium uppercase text-white mb-1">
                 {podcast.category_name}
               </p>
-              <p className="text-sm sm:text-base text-[#FFFFFF] leading-relaxed mb-6">
+              <p className="text-sm sm:text-base text-[#FFFFFF] leading-relaxed mb-6 px-4 md:px-0">
                 {cleanDescription(podcast.description)}
               </p>
               <div className="mt-6 sm:mt-10">
                 <p className="text-[#BFBFBF] text-xs sm:text-sm font-semibold mb-3">
                   Available on
                 </p>
-                <div className="flex gap-2 flex-wrap">
+                <div className="flex gap-2 justify-center md:justify-start flex-wrap">
                   {[
                     '/assets/icons/sportify.svg',
                     '/assets/icons/Group 1148.svg',
@@ -286,9 +280,10 @@ const PodcastDetails = () => {
               </div>
             </div>
           </div>
+
           <motion.button
             onClick={() => handleShare(podcast.title, window.location.href)}
-            className="absolute top-4 right-4 flex-shrink-0"
+            className="hidden md:block absolute top-4 right-4 flex-shrink-0"
             aria-label={`Share ${podcast.title}`}
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.9 }}
@@ -299,13 +294,13 @@ const PodcastDetails = () => {
               width={30}
               height={30}
               draggable="false"
-              className="w-5 sm:w-6 h-5 sm:h-6"
+              className="w-6 h-6"
             />
           </motion.button>
         </motion.div>
       )}
-      
 
+      {/* Episodes Section */}
       {!isPodcastLoading && podcast && (
         <div className="flex flex-col md:flex-row gap-6 px-4 sm:px-6 md:px-10 py-12 max-w-7xl mx-auto">
           <div className="flex-1 min-w-0">
@@ -316,6 +311,7 @@ const PodcastDetails = () => {
               </h2>
               <Divider className="bg-[#DCDCDC]" />
             </div>
+            
             {isEpisodesLoading ? (
               <div className="space-y-4">
                 {Array(3)
@@ -341,7 +337,7 @@ const PodcastDetails = () => {
                 variants={containerVariants}
                 initial="hidden"
                 animate="visible"
-                className="space-y-4"
+                className="space-y-6"
               >
                 {episodes.map((episode, index) => (
                   <Link
@@ -353,33 +349,32 @@ const PodcastDetails = () => {
                       variants={cardVariants}
                       custom={index}
                       whileHover="hover"
-                      className="bg-white rounded-2xl shadow-md p-4 sm:p-6 flex flex-col sm:flex-row gap-4 relative cursor-pointer"
+                      className="bg-white rounded-2xl shadow-md p-4 sm:p-6 flex flex-col sm:flex-row gap-6 relative cursor-pointer"
                       data-testid="episode-card"
                     >
-                    
-                      <div className="min-w-[157px]">
+                      <div className="w-full sm:w-[157px] h-[180px] sm:h-[129px] relative">
                         <Image
                           src={episode.picture_url || '/assets/images/fallback.jpg'}
                           alt={episode.title}
-                          width={157}
-                          height={129}
-                          className="w-[157px] h-[129px] object-cover rounded shadow-md"
+                          fill
+                          className="object-cover rounded shadow-md"
                           unoptimized
                           aria-label={`Cover for ${episode.title}`}
                         />
                       </div>
+                      
                       <div className="flex-1">
                         <div className="flex gap-3 font-bold sm:gap-5 text-xs text-[#828282] mb-2">
                           <p>{formatDate(episode.published_at)}</p>
                           <p>{formatDuration(episode.duration)}</p>
                         </div>
-                        <h3 className="text-base sm:text-lg font-semibold text-gray-900 truncate">
+                        <h3 className="text-base sm:text-lg font-semibold text-gray-900">
                           {episode.title}
                         </h3>
-                        <p className="text-xs sm:text-sm text-gray-600 mb-2 leading-relaxed">
+                        <p className="text-xs sm:text-sm text-gray-600 mb-4 leading-relaxed line-clamp-2">
                           {cleanDescription(episode.description)}
                         </p>
-                        <div className="flex gap-3 mt-3">
+                        <div className="flex gap-3">
                           <motion.button
                             onClick={(e) => {
                               e.preventDefault();
@@ -465,7 +460,7 @@ const PodcastDetails = () => {
             )}
           </div>
 
-          <div className="w-full md:w-[344px] flex-shrink-0">
+          <div className="hidden md:block w-[344px] flex-shrink-0">
             <p className="text-[#5A5A5A] text-[0.70rem] text-right font-semibold mb-4">
               ADVERTISEMENT
             </p>
