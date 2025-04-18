@@ -2,8 +2,8 @@ import './globals.css';
 import QueryClientWrapper from './QueryClientWrapper';
 
 export const metadata = {
-  title: 'Bloocode Technology App',
-  description: 'FRONTEND DEVELOPER – TECHNICAL ASSESSMENT',
+  title: 'naija podcast',
+  description: 'Naija Podcasts Platform',
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
