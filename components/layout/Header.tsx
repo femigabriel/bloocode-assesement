@@ -65,7 +65,7 @@ const Header: React.FC = () => {
             placeholder="Search"
               name="search"
             prefix={<SearchOutlined className="text-white" />}
-            className=" bg-[#00000052] h-[43px] rounded-[32px]"
+            className=" bg-[#00000052] h-[40px] rounded-[32px]"
           />
         </div>
       </div>
