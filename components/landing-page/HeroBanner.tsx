@@ -4,7 +4,8 @@ import Image from "next/image";
 const HeroBanner = () => (
   <section>
     <div className="flex h-[72px] w-full">
-      <div className="h-full max-w-[588px]">
+      {/* Left image - hide on small screens */}
+      <div className="hidden md:block h-full max-w-[588px]">
         <Image
           src="/assets/images/Group 974.svg"
           alt="hero"
@@ -15,6 +16,7 @@ const HeroBanner = () => (
         />
       </div>
 
+      {/* Right content */}
       <div className="flex-1 bg-[#1B1B1B] h-full overflow-hidden">
         <div className="w-full h-full flex items-center">
           <nav className="flex gap-12 animate-marquee whitespace-nowrap text-white text-sm px-6">
@@ -63,6 +65,7 @@ const HeroBanner = () => (
       </div>
     </div>
 
+    {/* Hero content image below */}
     <div className="py-4 px-4">
       <Image
         src="/assets/images/Group 1086.svg"
