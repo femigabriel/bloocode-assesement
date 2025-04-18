@@ -99,43 +99,6 @@ const fetchPodcastDetails = async (id: string): Promise<Podcast> => {
     return podcast;
   } catch (error: any) {
     console.error('Podcast Fetch Error:', error.response?.status, error.message, error.response?.data);
-    if (id === '126') {
-      return {
-        id: 126,
-        title: 'Fulfilment With YK',
-        author: 'Yinka Abdul',
-        category_name: 'Self-Improvement',
-        category_type: 'EDUCATION',
-        picture_url:
-          'https://d1sfpqaoey1aeo.cloudfront.net/651/PpUxqZuUJ25JsJD6QkPZbVSXjFVLly53vBHTwn3q.jpg',
-        description:
-          'The Fulfilment With YK Podcast is a lifestyle talk show that educates and entertains listeners on all areas of life...',
-        publisher: {
-          first_name: 'Yinka',
-          last_name: 'Abdul',
-          company_name: 'YK INNOVATION KONCEPT',
-          profile_image_url: null,
-        },
-      };
-    }
-    if (id === '129') {
-      return {
-        id: 129,
-        title: 'Another rape case',
-        author: 'Olufunke',
-        category_name: 'Parenting',
-        category_type: 'KIDS & FAMILY',
-        picture_url:
-          'https://d1sfpqaoey1aeo.cloudfront.net/710/rolo84XxkJ2zNKl3fGraYlkEvLhkpyNMDm7jk8zD.jpg',
-        description: 'It’s another victim in Gbogolu community when will this stop?……',
-        publisher: {
-          first_name: 'Olufunke',
-          last_name: 'Soyemi',
-          company_name: 'Voices of Vision',
-          profile_image_url: null,
-        },
-      };
-    }
     throw new Error('Failed to fetch podcast details');
   }
 };
@@ -197,7 +160,7 @@ const PodcastDetails = () => {
       try {
         await navigator.share({
           title,
-          text: `Check out this episode: ${title}`,
+          text: `Check out this ${title.includes('episode') ? 'episode' : 'podcast'}: ${title}`,
           url,
         });
         setNotification('Shared successfully!');
@@ -212,7 +175,6 @@ const PodcastDetails = () => {
   };
 
   const handleGift = () => {
-    // Placeholder: Clarify desired functionality
     setNotification('Gift feature not implemented yet');
     setTimeout(() => setNotification(''), 2000);
   };
@@ -231,7 +193,7 @@ const PodcastDetails = () => {
         </motion.div>
       )}
 
-      {/* Top Section: Podcast Profile */}
+      {/* Podcast Profile */}
       {isPodcastLoading ? (
         <div className="flex flex-col md:flex-row gap-6 px-4 sm:px-6 md:px-10 py-10 max-w-7xl mx-auto">
           <div className="w-full sm:w-80 h-80 sm:h-96 bg-gray-300 animate-pulse rounded" />
@@ -263,7 +225,7 @@ const PodcastDetails = () => {
           variants={containerVariants}
           initial="hidden"
           animate="visible"
-          className="flex flex-col md:flex-row gap-6 px-4 sm:px-6 md:px-10 py-10 max-w-7xl mx-auto"
+          className="flex flex-col md:flex-row gap-6 px-4 sm:px-6 md:px-10 py-10 max-w-7xl mx-auto relative"
           style={{
             background: 'linear-gradient(133.14deg, #2B3221 9.11%, rgba(242, 242, 242, 0) 298.89%)',
           }}
@@ -324,145 +286,210 @@ const PodcastDetails = () => {
               </div>
             </div>
           </div>
+          {/* Podcast Share Button */}
+          <motion.button
+            onClick={() => handleShare(podcast.title, window.location.href)}
+            className="absolute top-4 right-4 flex-shrink-0"
+            aria-label={`Share ${podcast.title}`}
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.9 }}
+          >
+            <Image
+              src="/assets/icons/Group 1156.svg"
+              alt="Share podcast"
+              width={24}
+              height={24}
+              draggable="false"
+              className="w-5 sm:w-6 h-5 sm:h-6"
+            />
+          </motion.button>
         </motion.div>
       )}
 
-      {/* Episodes Section */}
+      {/* Episodes and Advertisement Section */}
       {!isPodcastLoading && podcast && (
-        <div className="py-12 px-4 sm:px-6 md:px-10 max-w-7xl mx-auto">
-          <div>
-            <h2 className="text-sm font-bold mb-6 text-gray-900">
-              ALL EPISODES{' '}
-              <span className="text-[#5A5A5A]">({episodes?.length || 0} AVAILABLE)</span>
-            </h2>
-            <Divider className="bg-[#DCDCDC]" />
-          </div>
-          {isEpisodesLoading ? (
-            <div className="space-y-4">
-              {Array(3)
-                .fill(0)
-                .map((_, i) => (
-                  <div key={i} className="bg-white rounded-2xl shadow-md p-4 sm:p-6 flex gap-4">
-                    <div className="w-32 h-24 bg-gray-300 animate-pulse rounded" />
-                    <div className="flex-1 space-y-2">
-                      <div className="h-6 bg-gray-300 rounded w-3/4 animate-pulse" />
-                      <div className="h-4 bg-gray-300 rounded w-full animate-pulse" />
-                      <div className="h-4 bg-gray-300 rounded w-1/4 animate-pulse" />
-                    </div>
-                  </div>
-                ))}
+        <div className="flex flex-col md:flex-row gap-6 px-4 sm:px-6 md:px-10 py-12 max-w-7xl mx-auto">
+          {/* Episodes Section */}
+          <div className="flex-1 min-w-0">
+            <div>
+              <h2 className="text-sm font-bold mb-6 text-gray-900">
+                ALL EPISODES{' '}
+                <span className="text-[#5A5A5A]">({episodes?.length || 0} AVAILABLE)</span>
+              </h2>
+              <Divider className="bg-[#DCDCDC]" />
             </div>
-          ) : isEpisodesError || !episodes || episodes.length === 0 ? (
-            <p className="text-gray-500 italic">No episodes available yet.</p>
-          ) : (
-            <motion.div
-              variants={containerVariants}
-              initial="hidden"
-              animate="visible"
-              className="space-y-4"
-            >
-              {episodes.map((episode, index) => (
-                <motion.div
-                  key={episode.id}
-                  variants={cardVariants}
-                  custom={index}
-                  whileHover="hover"
-                  className="bg-white rounded-2xl shadow-md p-4 sm:p-6 flex flex-col sm:flex-row gap-4"
-                  data-testid="episode-card"
-                >
-                  <div className="flex justify-center items-center">
-                    <Image
-                      src={episode.picture_url || '/assets/images/fallback.jpg'}
-                      alt={episode.title}
-                      width={157}
-                      height={129}
-                      className="w-full sm:w-40 h-24 sm:h-[129px] object-cover rounded shadow-md"
-                      unoptimized
-                      aria-label={`Cover for ${episode.title}`}
-                    />
-                  </div>
-                  <div className="flex-1">
-                    <div className="flex gap-3 sm:gap-5 text-xs text-[#828282] mb-2">
-                      <p>{formatDate(episode.published_at)}</p>
-                      <p>{formatDuration(episode.duration)}</p>
+            {isEpisodesLoading ? (
+              <div className="space-y-4">
+                {Array(3)
+                  .fill(0)
+                  .map((_, i) => (
+                    <div
+                      key={i}
+                      className="bg-white rounded-2xl shadow-md p-4 sm:p-6 flex gap-4"
+                    >
+                      <div className="w-[157px] h-[129px] bg-gray-300 animate-pulse rounded" />
+                      <div className="flex-1 space-y-2">
+                        <div className="h-6 bg-gray-300 rounded w-3/4 animate-pulse" />
+                        <div className="h-4 bg-gray-300 rounded w-full animate-pulse" />
+                        <div className="h-4 bg-gray-300 rounded w-1/4 animate-pulse" />
+                      </div>
                     </div>
-                    <h3 className="text-base sm:text-lg font-semibold text-gray-900 truncate">
-                      {episode.title}
-                    </h3>
-                    <p className="text-xs sm:text-sm text-gray-600 mb-2">
-                      {cleanDescription(episode.description)}
-                    </p>
-                    <div className="flex gap-3 mt-3">
-                      <motion.button
-                        onClick={() => window.open(episode.content_url, '_blank')}
-                        className="flex-shrink-0"
-                        aria-label={`Play ${episode.title}`}
-                        whileHover={{ scale: 1.1 }}
-                        whileTap={{ scale: 0.9 }}
-                      >
-                        <Image
-                          src="/assets/icons/Others.svg"
-                          alt="Play episode"
-                          width={30}
-                          height={30}
-                          draggable="false"
-                          className="w-6 sm:w-[30px] h-6 sm:h-[30px]"
-                        />
-                      </motion.button>
-                      <motion.button
-                        onClick={() => handleCopy(episode.content_url)}
-                        className="flex-shrink-0"
-                        aria-label={`Copy link for ${episode.title}`}
-                        whileHover={{ scale: 1.1 }}
-                        whileTap={{ scale: 0.9 }}
-                      >
-                        <Image
-                          src="/assets/icons/Group 1167.svg"
-                          alt="Copy link"
-                          width={30}
-                          height={30}
-                          draggable="false"
-                          className="w-6 sm:w-[30px] h-6 sm:h-[30px]"
-                        />
-                      </motion.button>
-                      <motion.button
-                        onClick={() => handleShare(episode.title, episode.content_url)}
-                        className="flex-shrink-0"
-                        aria-label={`Share ${episode.title}`}
-                        whileHover={{ scale: 1.1 }}
-                        whileTap={{ scale: 0.9 }}
-                      >
-                        <Image
-                          src="/assets/icons/Group 1156.svg"
-                          alt="Share episode"
-                          width={30}
-                          height={30}
-                          draggable="false"
-                          className="w-6 sm:w-[30px] h-6 sm:h-[30px]"
-                        />
-                      </motion.button>
-                      <motion.button
-                        onClick={handleGift}
-                        className="flex-shrink-0"
-                        aria-label={`Gift ${episode.title}`}
-                        whileHover={{ scale: 1.1 }}
-                        whileTap={{ scale: 0.9 }}
-                      >
-                        <Image
-                          src="/assets/icons/Group 1157.svg"
-                          alt="Gift episode"
-                          width={30}
-                          height={30}
-                          draggable="false"
-                          className="w-6 sm:w-[30px] h-6 sm:h-[30px]"
-                        />
-                      </motion.button>
+                  ))}
+              </div>
+            ) : isEpisodesError || !episodes || episodes.length === 0 ? (
+              <p className="text-gray-500 italic">No episodes available yet.</p>
+            ) : (
+              <motion.div
+                variants={containerVariants}
+                initial="hidden"
+                animate="visible"
+                className="space-y-4"
+              >
+                {episodes.map((episode, index) => (
+                  <motion.div
+                    key={episode.id}
+                    variants={cardVariants}
+                    custom={index}
+                    whileHover="hover"
+                    className="bg-white rounded-2xl shadow-md p-4 sm:p-6 flex flex-col sm:flex-row gap-4 relative"
+                    data-testid="episode-card"
+                  >
+                    {/* Episode Share Button */}
+                    <motion.button
+                      onClick={() => handleShare(episode.title, episode.content_url)}
+                      className="absolute top-4 right-4 flex-shrink-0"
+                      aria-label={`Share ${episode.title}`}
+                      whileHover={{ scale: 1.1 }}
+                      whileTap={{ scale: 0.9 }}
+                    >
+                      <Image
+                        src="/assets/icons/Group 1156.svg"
+                        alt="Share episode"
+                        width={24}
+                        height={24}
+                        draggable="false"
+                        className="w-5 sm:w-6 h-5 sm:h-6"
+                      />
+                    </motion.button>
+                    <div className="min-w-[157px]">
+                      <Image
+                        src={episode.picture_url || '/assets/images/fallback.jpg'}
+                        alt={episode.title}
+                        width={157}
+                        height={129}
+                        className="w-[157px] h-[129px] object-cover rounded shadow-md"
+                        unoptimized
+                        aria-label={`Cover for ${episode.title}`}
+                      />
                     </div>
-                  </div>
-                </motion.div>
-              ))}
-            </motion.div>
-          )}
+                    <div className="flex-1">
+                      <div className="flex gap-3 sm:gap-5 text-xs text-[#828282] mb-2">
+                        <p>{formatDate(episode.published_at)}</p>
+                        <p>{formatDuration(episode.duration)}</p>
+                      </div>
+                      <h3 className="text-base sm:text-lg font-semibold lg:w-[562px] mb-3">
+                        {episode.title}
+                      </h3>
+                      <p className="text-xs sm:text-sm mb-2 leading-relaxed lg:w-[562px]">
+                        {cleanDescription(episode.description)}
+                      </p>
+                      <div className="flex gap-3 mt-3">
+                        <motion.button
+                          onClick={() => window.open(episode.content_url, '_blank')}
+                          className="flex-shrink-0"
+                          aria-label={`Play ${episode.title}`}
+                          whileHover={{ scale: 1.1 }}
+                          whileTap={{ scale: 0.9 }}
+                        >
+                          <Image
+                            src="/assets/icons/Others.svg"
+                            alt="Play episode"
+                            width={30}
+                            height={30}
+                            draggable="false"
+                            className="w-6 sm:w-[30px] h-6 sm:h-[30px]"
+                          />
+                        </motion.button>
+                        <motion.button
+                          onClick={() => handleCopy(episode.content_url)}
+                          className="flex-shrink-0"
+                          aria-label={`Copy link for ${episode.title}`}
+                          whileHover={{ scale: 1.1 }}
+                          whileTap={{ scale: 0.9 }}
+                        >
+                          <Image
+                            src="/assets/icons/Group 1167.svg"
+                            alt="Copy link"
+                            width={30}
+                            height={30}
+                            draggable="false"
+                            className="w-6 sm:w-[30px] h-6 sm:h-[30px]"
+                          />
+                        </motion.button>
+                        <motion.button
+                          onClick={() => handleShare(episode.title, episode.content_url)}
+                          className="flex-shrink-0"
+                          aria-label={`Share ${episode.title}`}
+                          whileHover={{ scale: 1.1 }}
+                          whileTap={{ scale: 0.9 }}
+                        >
+                          <Image
+                            src="/assets/icons/Group 1156.svg"
+                            alt="Share episode"
+                            width={30}
+                            height={30}
+                            draggable="false"
+                            className="w-6 sm:w-[30px] h-6 sm:h-[30px]"
+                          />
+                        </motion.button>
+                        <motion.button
+                          onClick={handleGift}
+                          className="flex-shrink-0"
+                          aria-label={`Gift ${episode.title}`}
+                          whileHover={{ scale: 1.1 }}
+                          whileTap={{ scale: 0.9 }}
+                        >
+                          <Image
+                            src="/assets/icons/Group 1157.svg"
+                            alt="Gift episode"
+                            width={30}
+                            height={30}
+                            draggable="false"
+                            className="w-6 sm:w-[30px] h-6 sm:h-[30px]"
+                          />
+                        </motion.button>
+                      </div>
+                    </div>
+                  </motion.div>
+                ))}
+              </motion.div>
+            )}
+          </div>
+
+          {/* Advertisement Section */}
+          <div className="w-full md:w-[344px] flex-shrink-0 di">
+            <p className="text-[#5A5A5A] text-[0.70rem] text-right font-semibold mb-4">
+              ADVERTISEMENT
+            </p>
+            <div className="space-y-5">
+              <Image
+                src="/assets/images/Rectangle 53.svg"
+                alt="Advertisement"
+                width={344}
+                height={489}
+                className="w-full max-w-[344px] h-auto object-cover"
+                draggable="false"
+              />
+              <Image
+                src="/assets/images/Rectangle 55.svg"
+                alt="Advertisement"
+                width={344}
+                height={489}
+                className="w-full max-w-[344px] h-auto object-cover"
+                draggable="false"
+              />
+            </div>
+          </div>
         </div>
       )}
     </section>
