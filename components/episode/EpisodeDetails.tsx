@@ -225,19 +225,32 @@ const EpisodeDetails = () => {
 
   useEffect(() => {
     const audio = audioRef.current;
+  
+    const updateTime = () => {
+      if (audio) {
+        setCurrentTime(audio.currentTime);
+      }
+    };
+  
+    const setAudioDuration = () => {
+      if (audio) {
+        setDuration(audio.duration);
+      }
+    };
+  
     if (audio) {
-      const updateTime = () => setCurrentTime(audio.currentTime);
-      const setAudioDuration = () => setDuration(audio.duration);
-
       audio.addEventListener('timeupdate', updateTime);
       audio.addEventListener('loadedmetadata', setAudioDuration);
-
-      return () => {
+    }
+  
+    return () => {
+      if (audio) {
         audio.removeEventListener('timeupdate', updateTime);
         audio.removeEventListener('loadedmetadata', setAudioDuration);
-      };
-    }
-  }, []);
+      }
+    };
+  }, [audioRef.current, isPlaying]);
+  
 
   if (!podcastId) {
     return (
