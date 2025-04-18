@@ -38,7 +38,7 @@ const fetchTrendingEpisodes = async (): Promise<Podcast[]> => {
   }
 };
 
-const TrendingEpisodes: React.FC = () => {
+const TrendingPodcasts = () => {
   const { data, isLoading, isError, error } = useQuery<Podcast[], Error>({
     queryKey: ['trendingEpisodes'],
     queryFn: fetchTrendingEpisodes,
@@ -120,4 +120,4 @@ const TrendingEpisodes: React.FC = () => {
   );
 };
 
-export default TrendingEpisodes;
+export default TrendingPodcasts;
