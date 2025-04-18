@@ -181,7 +181,6 @@ const PodcastDetails = () => {
 
   return (
     <section className="min-h-screen relative">
-      {/* Notification Toast */}
       {notification && (
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -193,7 +192,6 @@ const PodcastDetails = () => {
         </motion.div>
       )}
 
-      {/* Podcast Profile */}
       {isPodcastLoading ? (
         <div className="flex flex-col md:flex-row gap-6 px-4 sm:px-6 md:px-10 py-10 max-w-7xl mx-auto">
           <div className="w-full sm:w-80 h-80 sm:h-96 bg-gray-300 animate-pulse rounded" />
@@ -286,7 +284,6 @@ const PodcastDetails = () => {
               </div>
             </div>
           </div>
-          {/* Podcast Share Button */}
           <motion.button
             onClick={() => handleShare(podcast.title, window.location.href)}
             className="absolute top-4 right-4 flex-shrink-0"
@@ -306,7 +303,6 @@ const PodcastDetails = () => {
         </motion.div>
       )}
 
-      {/* Episodes and Advertisement Section */}
       {!isPodcastLoading && podcast && (
         <div className="flex flex-col md:flex-row gap-6 px-4 sm:px-6 md:px-10 py-12 max-w-7xl mx-auto">
           {/* Episodes Section */}
@@ -354,7 +350,7 @@ const PodcastDetails = () => {
                     className="bg-white rounded-2xl shadow-md p-4 sm:p-6 flex flex-col sm:flex-row gap-4 relative"
                     data-testid="episode-card"
                   >
-                    {/* Episode Share Button */}
+             
                     <motion.button
                       onClick={() => handleShare(episode.title, episode.content_url)}
                       className="absolute top-4 right-4 flex-shrink-0"
@@ -468,7 +464,7 @@ const PodcastDetails = () => {
 
           {/* Advertisement Section */}
           <div className="w-full md:w-[344px] flex-shrink-0 di">
-            <p className="text-[#5A5A5A] text-[0.70rem] text-right font-semibold mb-4">
+            <p className="text-[#5A5A5A] text-[0.70rem] text-right font-semibold mb-1">
               ADVERTISEMENT
             </p>
             <div className="space-y-5">
