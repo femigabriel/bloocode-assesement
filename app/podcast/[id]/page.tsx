@@ -24,52 +24,114 @@ interface Podcast {
   };
 }
 
+interface Episode {
+  id: number;
+  title: string;
+  description: string;
+  duration: string; // e.g., "30:15"
+  release_date: string; // e.g., "2024-10-04"
+}
+
 const containerVariants = {
   hidden: { opacity: 0 },
   visible: { opacity: 1, transition: { staggerChildren: 0.1 } },
 };
 
+const cardVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: (i: number) => ({
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.5, delay: i * 0.1, ease: 'easeOut' },
+  }),
+};
+
 const fetchPodcastDetails = async (id: string): Promise<Podcast> => {
-  const { data } = await axios.get(
-    'https://api.wokpa.app/api/listeners/top-podcasts?page=1&per_page=50'
-  );
-  const podcasts = Array.isArray(data?.data?.data) ? data.data.data : [];
-  const podcast = podcasts.find((p: Podcast) => p.id === Number(id));
-  if (!podcast) throw new Error('Podcast not found');
-  return podcast;
+  try {
+    const { data } = await axios.get(`https://api.wokpa.app/api/listeners/podcasts/${id}`);
+    console.log('Podcast Response:', data); // Debug log
+    return data?.data || {};
+  } catch (error: any) {
+    console.error('Podcast Fetch Error:', error.response?.status, error.message, error.response?.data);
+    throw new Error('Failed to fetch podcast details');
+  }
+};
+
+// Mock episodes fetch until real endpoint is provided
+const fetchPodcastEpisodes = async (_id: string): Promise<Episode[]> => {
+  // Replace with real endpoint, e.g.:
+  // const { data } = await axios.get(`https://api.wokpa.app/api/listeners/podcasts/${id}/episodes?page=1&per_page=20`);
+  // return Array.isArray(data?.data?.data) ? data.data.data : [];
+  return [
+    {
+      id: 1,
+      title: 'Episode 1: Introduction',
+      description: 'An introduction to the podcast series.',
+      duration: '30:15',
+      release_date: '2024-06-18',
+    },
+    {
+      id: 2,
+      title: 'Episode 2: Community Issues',
+      description: 'Discussing key challenges in the community.',
+      duration: '45:00',
+      release_date: '2024-07-01',
+    },
+    {
+      id: 3,
+      title: 'Episode 3: Moving Forward',
+      description: 'Solutions and next steps for change.',
+      duration: '38:20',
+      release_date: '2024-07-15',
+    },
+  ];
 };
 
 const PodcastDetailPage = () => {
   const params = useParams();
   const id = params.id as string;
 
+  console.log('Podcast ID:', id); // Debug log
+
   const {
     data: podcast,
-    isLoading,
-    isError,
-    error,
+    isLoading: isPodcastLoading,
+    isError: isPodcastError,
+    error: podcastError,
   } = useQuery<Podcast, Error>({
     queryKey: ['podcast', id],
     queryFn: () => fetchPodcastDetails(id),
     retry: 3,
   });
 
+  const {
+    data: episodes,
+    isLoading: isEpisodesLoading,
+    isError: isEpisodesError,
+    error: episodesError,
+  } = useQuery<Episode[], Error>({
+    queryKey: ['podcastEpisodes', id],
+    queryFn: () => fetchPodcastEpisodes(id),
+    retry: 3,
+  });
+
   return (
     <section className="px-4 md:px-8 lg:px-12 py-10 max-w-6xl mx-auto">
-      {isLoading ? (
-        <div className="flex flex-col md:flex-row gap-6 mb-12">
-          <div className="w-full md:w-1/3 h-64 bg-gray-300 animate-pulse rounded-2xl" />
-          <div className="w-full md:w-2/3 space-y-4">
+      {/* Top Section: Podcast Profile */}
+      {isPodcastLoading ? (
+        <div className="flex flex-col md:flex-row gap-10 mb-12">
+          <div className="w-full md:w-[400px] h-[400px] bg-gray-300 animate-pulse rounded-2xl" />
+          <div className="w-full md:flex-1 space-y-4">
             <div className="h-8 bg-gray-300 rounded w-3/4 animate-pulse" />
             <div className="h-6 bg-gray-300 rounded w-1/2 animate-pulse" />
             <div className="h-4 bg-gray-300 rounded w-full animate-pulse" />
             <div className="h-4 bg-gray-300 rounded w-full animate-pulse" />
           </div>
         </div>
-      ) : isError ? (
+      ) : isPodcastError ? (
         <div className="text-center mb-12">
           <p className="text-red-500 mb-4">
-            Unable to load podcast details: {error?.message || 'Unknown error'}
+            Unable to load podcast details: {podcastError?.message || 'Unknown error'}
           </p>
           <Link href="/" className="text-[#CC0001] hover:text-[#A30001] font-medium">
             Back to Home
@@ -102,7 +164,6 @@ const PodcastDetailPage = () => {
             <p className="text-lg font-medium text-gray-600 mb-1">By {podcast.author}</p>
             <p className="text-sm font-medium text-[#CC0001] mb-4 uppercase">{podcast.category_name}</p>
             <p className="text-base text-gray-700 leading-relaxed mb-6">{podcast.description}</p>
-
             <div className="flex items-center gap-4 p-4 border rounded-lg bg-gray-50 shadow-sm">
               {podcast.publisher.profile_image_url && (
                 <Image
@@ -124,10 +185,54 @@ const PodcastDetailPage = () => {
         </motion.div>
       )}
 
-      {!isLoading && podcast && (
+      {/* Episodes Section */}
+      {!isPodcastLoading && podcast && (
         <div className="mt-12">
-          <h2 className="text-2xl font-bold mb-4">Episodes</h2>
-          <div className="text-gray-500 italic">No episodes available yet.</div>
+          <h2 className="text-2xl font-bold mb-6">
+            ALL EPISODES ({episodes?.length || 3} AVAILABLE)
+          </h2>
+          {isEpisodesLoading ? (
+            <div className="space-y-4">
+              {Array(3).fill(0).map((_, i) => (
+                <div key={i} className="bg-white rounded-2xl shadow-md p-6">
+                  <div className="h-6 bg-gray-300 rounded w-3/4 mb-2 animate-pulse" />
+                  <div className="h-4 bg-gray-300 rounded w-full mb-2 animate-pulse" />
+                  <div className="h-4 bg-gray-300 rounded w-1/4 animate-pulse" />
+                </div>
+              ))}
+            </div>
+          ) : isEpisodesError ? (
+            <div className="text-center">
+              <p className="text-red-500 mb-4">
+                Unable to load episodes: {episodesError?.message || 'Unknown error'}
+              </p>
+            </div>
+          ) : !episodes || episodes.length === 0 ? (
+            <p className="text-gray-500 italic">No episodes available yet.</p>
+          ) : (
+            <motion.div
+              variants={containerVariants}
+              initial="hidden"
+              animate="visible"
+              className="space-y-4"
+            >
+              {episodes.map((episode, index) => (
+                <motion.div
+                  key={episode.id}
+                  variants={cardVariants}
+                  custom={index}
+                  className="bg-white rounded-2xl shadow-md p-6"
+                >
+                  <h3 className="text-lg font-semibold text-gray-900 truncate">{episode.title}</h3>
+                  <p className="text-sm text-gray-600 mb-4">{episode.description}</p>
+                  <div className="flex justify-between text-sm text-gray-500">
+                    <span>{episode.duration}</span>
+                    <span>{new Date(episode.release_date).toLocaleDateString()}</span>
+                  </div>
+                </motion.div>
+              ))}
+            </motion.div>
+          )}
         </div>
       )}
     </section>

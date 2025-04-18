@@ -32,7 +32,7 @@ const containerVariants = {
 const fetchTrendingPodcasts = async (): Promise<Podcast[]> => {
   try {
     const { data } = await axios.get('https://api.wokpa.app/api/listeners/top-podcasts?page=1&per_page=15');
-   console.log(data?.data?.data)
+   console.log(data)
     return Array.isArray(data?.data?.data) ? data.data.data : [];
   } catch (error) {
     console.error('Error fetching trending podcasts:', error);
